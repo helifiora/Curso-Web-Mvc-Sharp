@@ -17,6 +17,28 @@
 
     <ItemGroup>
       <Compile Remove="Controllers\Departments.cs" />
+      <Compile Remove="Controllers\DepartmentsController.cs" />
+      <Compile Remove="Views\Departments\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Views\Departments\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <None Remove="Views\Departments\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Content Remove="Views\Departments\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Departments\Index.cshtml" />
     </ItemGroup>
 
 </Project>
