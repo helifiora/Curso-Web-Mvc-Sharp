@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAppSalesMVC.Data;
+using WebAppSalesMVC.Models;
+using WebAppSalesMVC.Services;
 
 namespace WebAppSalesMVC
 {
@@ -45,6 +47,7 @@ namespace WebAppSalesMVC
                 });
 
             services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
