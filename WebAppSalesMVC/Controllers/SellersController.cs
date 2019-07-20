@@ -27,9 +27,20 @@ namespace WebAppSalesMVC.Controllers
             return View();
         }
 
-        public IActionResult Details()
+        public IActionResult Details(int ? id)
         {
-            return View();
+            if (!id.HasValue)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            
+            return View(obj);
         }
 
         public IActionResult Create()
