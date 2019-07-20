@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WebAppSalesMVC.Models;
 using WebAppSalesMVC.Services;
 
 namespace WebAppSalesMVC.Controllers
@@ -30,6 +31,19 @@ namespace WebAppSalesMVC.Controllers
         public IActionResult Delete()
         {
             return View();
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Seller seller)
+        {
+            _sellerService.Insert(seller);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
