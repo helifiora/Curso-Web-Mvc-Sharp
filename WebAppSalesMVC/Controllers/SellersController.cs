@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using WebAppSalesMVC.Models;
 using WebAppSalesMVC.Models.ViewModels;
 using WebAppSalesMVC.Services;
+using WebAppSalesMVC.Services.Exceptions;
 
 namespace WebAppSalesMVC.Controllers
 {
@@ -22,12 +25,7 @@ namespace WebAppSalesMVC.Controllers
             return View(list);
         }
 
-        public IActionResult Edit()
-        {
-            return View();
-        }
-
-        public IActionResult Details(int ? id)
+        public IActionResult Edit(int? id)
         {
             if (!id.HasValue)
             {
@@ -39,7 +37,49 @@ namespace WebAppSalesMVC.Controllers
             {
                 return NotFound();
             }
-            
+
+            List<Department> departments = _departmentService.FindAll();
+            SellerModelViewModel viewModel = new SellerModelViewModel() {Seller = obj, Departments = departments};
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if (id != seller.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _sellerService.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound();
+            }
+            catch (DbConcurrencyException e)
+            {
+                return BadRequest();
+            }
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
             return View(obj);
         }
 
@@ -49,7 +89,7 @@ namespace WebAppSalesMVC.Controllers
             var viewModel = new SellerModelViewModel {Departments = departments};
             return View(viewModel);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
@@ -57,7 +97,7 @@ namespace WebAppSalesMVC.Controllers
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
-        
+
         public IActionResult Delete(int? id)
         {
             if (!id.HasValue)
