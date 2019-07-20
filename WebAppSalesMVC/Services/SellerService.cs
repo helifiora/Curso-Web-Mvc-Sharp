@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using WebAppSalesMVC.Data;
 using WebAppSalesMVC.Models;
 
@@ -22,6 +23,7 @@ namespace WebAppSalesMVC.Services
 
         public void Insert(Seller seller)
         {
+            seller.Department = _context.Department.First();
             _context.Add(seller);
             _context.SaveChanges();
         }
