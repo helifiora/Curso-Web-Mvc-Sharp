@@ -30,13 +30,13 @@ namespace WebAppSalesMVC.Controllers
         {
             if (!id.HasValue)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
+                return RedirectToAction(nameof(Error), new {message = "Id not provided"});
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id not found" });
+                return RedirectToAction(nameof(Error), new {message = "Id not found"});
             }
 
             List<Department> departments = _departmentService.FindAll();
@@ -48,9 +48,16 @@ namespace WebAppSalesMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerModelViewModel() {Seller = seller, Departments = departments};
+                return View(viewModel);
+            }
+
             if (id != seller.Id)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id mistatch" });
+                return RedirectToAction(nameof(Error), new {message = "Id mistatch"});
             }
 
             try
@@ -60,11 +67,11 @@ namespace WebAppSalesMVC.Controllers
             }
             catch (NotFoundException e)
             {
-                return RedirectToAction(nameof(Error), new { message = e.Message });
+                return RedirectToAction(nameof(Error), new {message = e.Message});
             }
             catch (DbConcurrencyException e)
             {
-                return RedirectToAction(nameof(Error), new { message = e.Message });
+                return RedirectToAction(nameof(Error), new {message = e.Message});
             }
         }
 
@@ -72,13 +79,13 @@ namespace WebAppSalesMVC.Controllers
         {
             if (!id.HasValue)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
+                return RedirectToAction(nameof(Error), new {message = "Id not provided"});
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id not found" });
+                return RedirectToAction(nameof(Error), new {message = "Id not found"});
             }
 
             return View(obj);
@@ -95,6 +102,13 @@ namespace WebAppSalesMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerModelViewModel() {Seller = seller, Departments = departments};
+                return View(viewModel);
+            }
+
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -103,7 +117,7 @@ namespace WebAppSalesMVC.Controllers
         {
             if (!id.HasValue)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id not found!"});
+                return RedirectToAction(nameof(Error), new {message = "Id not found!"});
             }
 
             var obj = _sellerService.FindById(id.Value);
